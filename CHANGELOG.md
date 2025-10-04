@@ -1,6 +1,44 @@
 ## Release History
+* **0.8.4**
+    * 🌀 `ENHANCEMENT` Removed some of the unnecessary code to reduce size
+* **0.8.3**
+    * 🌀 `ENHANCEMENT` Added some safeguards to prevent issues or errors
+    * 🌀 `ENHANCEMENT` Added new features in nanomodal.js that have not been added yet
+* **0.8.2**
+    * 💡 `FEATURE` Added an option to disable the Escape key to close the modal (Fixes #105)
+    * 🌀 `ENHANCEMENT` Improved the process of checking whether a user clicked on a close modal button (Fixes #490)
+* **0.8.1**
+    * 🐞 `BUGFIX` Focus trap works if the focus is outside of the modal
+* **0.8.0**
+    * 🌀 `ENHANCEMENT` Added nanomodal.js &mdash; a lightweight version of Micromodal! 😊
+* **0.7.5**
+    * 🌀 `ENHANCEMENT` Made the code easier to read
+* **0.7.4**
+    * 🐞 `BUGFIX` Added back the ability to pass an element to Micromodal (Fixes breaking change in 0.6.2)
+* **0.7.3**
+    * 🌀 `ENHANCEMENT` Refactored some of the code and seprated some lines to functions
+    * 🌀 `ENHANCEMENT` Improved the disable scroll funciton on mobile
+* **0.7.2**
+    * 🌀 `ENHANCEMENT` Improved the documentation and added new features to it
+    * 🐞 `BUGFIX` The triggerMap iteration is now fixed (#372)
+    * 🐞 `BUGFIX` The Escape key closes the topmost one instead of all modals when more than one is open (#421)
+    * 🐞 `BUGFIX` Pressing tab works properly when multiple modals are open (#544)
+    * 🐞 `BUGFIX` Fixed a bug removing a modal with animation, showing it again causes the modal to disappear after the animation
+* **0.7.1**
+    * 🌀 `ENHANCEMENT` MicroModal.show now initializes a new modal if the element passed in is unregistered
+    * 🌀 `ENHANCEMENT` Improved the description in debug mode
+    * 🐞 `BUGFIX` Debug mode is fixed
+* **0.7.0**
+    * 💡 `FEATURE` Added api to initialize and remove modals
+    * 💡 `FEATURE` Added a way to configure the properties of existing modals
+    * 🌀 `ENHANCEMENT` Initial options are stored globally
+    * 🐞 `BUGFIX` The config option now applies in MicroModal.show()
+* **0.6.2**
+    * 🐞 `BUGFIX` Fixed a bug where MicroModal.close() causes issues when multiple modals are present (#338)
+    * ⚠️ `BREAKING CHANGE` Modals now must have ids to function properly<br>
+    `MIGRATION` Add id attributes to modal elements; example: &lt;div id="modal-1" ...&gt;.
 * **0.6.1**
-    * 🐞 `BUGFIX` Add ability to pass an element to Micromodal.close()
+    * 🐞 `BUGFIX` Add ability to pass an element to MicroModal.close()
     * 🌀 `ENHANCEMENT` Updated documentation for show and close methods
 * **0.6.0**
     * 💡 `FEATURE` Added ability to pass an element to Micromodal
