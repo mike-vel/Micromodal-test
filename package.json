@@ -31,13 +31,19 @@
   "bugs": {
     "url": "https://github.com/ghosh/micromodal/issues"
   },
-  "homepage": "https://github.com/ghosh/micromodal#readme",
+  "homepage": "./",
   "dependencies": {
-    "concurrently": "^6.0.2",
-    "cypress": "^9.0.0",
-    "eslint": "8.2.0"
+    "concurrently": "^9.2.1",
+    "cypress": "^15.3.0",
+    "eslint": "9.37.0"
   },
   "engines": {
     "node": ">=10"
+  },
+  "devDependencies": {
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-n": "^17.23.1",
+    "eslint-plugin-promise": "^7.2.1"
   }
 }
