@@ -1,4 +1,7 @@
 ## Release History
+* **0.8.5**
+    * 🌀 `ENHANCEMENT` Changed the way to disable escape keys
+    * 🌀 `ENHANCEMENT` Made nanomodal.js even smaller
 * **0.8.4**
     * 🌀 `ENHANCEMENT` Removed some of the unnecessary code to reduce size
 * **0.8.3**
