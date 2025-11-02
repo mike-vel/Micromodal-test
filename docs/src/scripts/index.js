@@ -1,7 +1,12 @@
 import MicroModal from './micromodal.js'
 import './prism.js'
 
-const domainSite = 'micromodal.vercel.app'
+let externalLinks = [
+  ["Advanced"]
+]
+let versionLinks = [
+  []
+]
 
 // Theme handling
 const themeToggle = document.getElementById('theme-toggle')
@@ -64,82 +69,119 @@ const otherLinksEl = document.getElementById('other-links')
 // Navigation dropdown elements
 const sectionPickerBtn = document.getElementById('section-picker-button')
 const currentSectionEl = document.getElementById('current-section')
-const dropdownArrowEl = document.getElementById('dropdown-arrow')
 const sectionsDropdown = document.getElementById('sections-dropdown')
 const sectionPickerList = document.getElementById('section-picker')
 const otherLinksPicker = document.getElementById('other-links-picker')
 
-let dropdownOpen = false
+const versionsDropdown = document.getElementById('versions-dropdown')
+const versionPickerBtn = document.getElementById('version-picker-button')
+
+const dropdowns = {
+  versions: {
+    elem: versionsDropdown,
+    btn: versionPickerBtn,
+    opened: false
+  },
+  sections: {
+    elem: sectionsDropdown,
+    btn: sectionPickerBtn,
+    opened: false
+  }
+}
 const DROPDOWN_ANIM_MS = 240
 
-function openDropdown () {
-  if (dropdownOpen) return // already open
+function openDropdown (dropdown) {
+  // Check if not opened
+  const curDropdown = dropdowns[dropdown]
+  if (curDropdown?.opened === false) {
+    curDropdown.elem.classList.remove('hidden', 'dropdown-closing')
+    curDropdown.elem.setAttribute('aria-hidden', 'false')
+    curDropdown.btn.setAttribute('aria-expanded', 'true')
+    curDropdown.opened = true
+    updateSectionPositions()
 
-  sectionsDropdown.classList.remove('hidden', 'dropdown-closing')
-  sectionsDropdown.setAttribute('aria-hidden', 'false')
-  sectionPickerBtn.setAttribute('aria-expanded', 'true')
-  dropdownOpen = true
-  updateSectionPositions()
-
-  // allow reflow before open animation
-  window.setTimeout(() => {
-    sectionsDropdown.classList.add('dropdown-opening')
-    dropdownArrowEl.style.transform = 'rotate(180deg)'
-
-    // swap animation class to stable open after animation
+    // allow reflow before open animation
     window.setTimeout(() => {
-      sectionsDropdown.classList.remove('dropdown-opening')
-      sectionsDropdown.classList.add('dropdown-open')
-    }, DROPDOWN_ANIM_MS)
-  }, 0)
+      curDropdown.elem.classList.add('dropdown-opening')
+      curDropdown.btn.querySelector('.dropdown-arrow').style.transform = 'rotateX(180deg)'
+
+      // swap animation class to stable open after animation
+      window.setTimeout(() => {
+        curDropdown.elem.classList.remove('dropdown-opening')
+        curDropdown.elem.classList.add('dropdown-open')
+      }, DROPDOWN_ANIM_MS)
+    }, 0)
+  }
 }
 
-function closeDropdown () {
-  if (!dropdownOpen) return // already hidden
+function closeDropdown (dropdown) {
+  // Check if opened
+  const curDropdown = dropdowns[dropdown]
+  if (curDropdown?.opened === true) {
+    curDropdown.elem.classList.remove('dropdown-opening', 'dropdown-open')
+    curDropdown.elem.classList.add('dropdown-closing')
+    curDropdown.elem.setAttribute('aria-hidden', 'true')
+    curDropdown.btn.setAttribute('aria-expanded', 'false')
+    curDropdown.btn.querySelector('.dropdown-arrow').style.transform = ''
+    curDropdown.opened = false
 
-  sectionsDropdown.classList.remove('dropdown-opening', 'dropdown-open')
-  sectionsDropdown.classList.add('dropdown-closing')
-  sectionsDropdown.setAttribute('aria-hidden', 'true')
-  sectionPickerBtn.setAttribute('aria-expanded', 'false')
-  dropdownArrowEl.style.transform = ''
-  dropdownOpen = false
-
-  // hide after animation
-  window.setTimeout(() => {
-    sectionsDropdown.classList.add('hidden')
-    sectionsDropdown.classList.remove('dropdown-closing')
-    updateSectionPositions()
-  }, DROPDOWN_ANIM_MS)
+    // hide after animation
+    window.setTimeout(() => {
+      curDropdown.elem.classList.add('hidden')
+      curDropdown.elem.classList.remove('dropdown-closing')
+      updateSectionPositions()
+    }, DROPDOWN_ANIM_MS)
+  }
 }
 
 // Toggle dropdown when button is clicked
-sectionPickerBtn.addEventListener('click', function (e) {
+versionPickerBtn.addEventListener('click', function (e) {
   e.preventDefault()
-  if (dropdownOpen) {
-    closeDropdown()
+  if (dropdowns.versions.opened) {
+    closeDropdown('versions')
   } else {
-    openDropdown()
+    openDropdown('versions')
   }
 })
+
+sectionPickerBtn.addEventListener('click', function (e) {
+  e.preventDefault()
+  if (dropdowns.sections.opened) {
+    closeDropdown('sections')
+  } else {
+    openDropdown('sections')
+  }
+})
+
 // Close dropdown if Escape key is pressed
 sectionPickerBtn.addEventListener('keydown', function (e) {
   if (e.key === 'Escape') {
-    closeDropdown()
+    closeDropdown('versions')
+    closeDropdown('sections')
   }
 })
 
 // Close dropdown when clicking outside
 document.addEventListener('click', function (ev) {
-  if (!sectionsDropdown || !dropdownOpen) return
-  const target = ev.target
-  if (!sectionsDropdown.contains(target) && target !== sectionPickerBtn && !sectionPickerBtn.contains(target)) {
-    closeDropdown()
+  if (dropdowns.versions.opened) {
+    const target = ev.target
+    if (!versionsDropdown.contains(target) && target !== versionPickerBtn && !versionPickerBtn.contains(target)) {
+      closeDropdown('versions')
+    }
+  }
+  if (dropdowns.sections.opened) {
+    const target = ev.target
+    if (!sectionsDropdown.contains(target) && target !== sectionPickerBtn && !sectionPickerBtn.contains(target)) {
+      closeDropdown('sections')
+    }
   }
 })
 
 // Close on Escape key globally
 document.addEventListener('keydown', function (ev) {
-  if (ev.key === 'Escape' && dropdownOpen) closeDropdown()
+  const isEsc = ev.key === 'Escape'
+  if (isEsc && dropdowns.versions.opened) closeDropdown('versions')
+  if (isEsc && dropdowns.sections.opened) closeDropdown('sections')
 })
 
 const highlightPageSection = function () {
@@ -171,7 +213,7 @@ const highlightPageSection = function () {
 
 let sectionElements
 
-function updateSectionPositions() {
+function updateSectionPositions () {
   Array.prototype.forEach.call(sectionElements, function (e) {
     sections[e.id].position = e.offsetTop - 64
   })
@@ -222,7 +264,7 @@ window.onload = function () {
 
 sectionsDropdown.addEventListener('click', function (e) {
   if (!e.target.closest('a[href^="#"]')) return
-  closeDropdown()
+  closeDropdown('sections')
 })
 
 window.onscroll = highlightPageSection

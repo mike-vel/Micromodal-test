@@ -95,6 +95,8 @@ body {
 
 /* Header & actions */
 .header {
+  position: relative;
+  z-index: 11;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -106,6 +108,13 @@ body {
   backdrop-filter: blur(6px);
 }
 
+.header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Logos and Icons */
 .logo {
   display: flex;
   align-items: center;
@@ -116,10 +125,24 @@ body {
   color: var(--text);
 }
 
-.header-actions {
-  display: flex;
-  gap: 8px;
-  align-items: center;
+.external-icon {
+  display: inline-block;
+  background-image: url('../images/external-link.svg');
+  background-size: contain;
+  width: 1em;
+  height: 1em;
+  margin-inline-start: 0.25em;
+  vertical-align: -0.125em;
+}
+
+/* Use ../images/external-link.svg when dark mode is active */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .external-icon {
+    background-image: url('../images/external-link-dark.svg');
+  }
+}
+html[data-theme="dark"] .external-icon {
+  background-image: url('../images/external-link-dark.svg');
 }
 
 
@@ -234,6 +257,12 @@ article {
   border: 2px solid rgba(0,0,0,0.06);
   border-radius: 8px;
 }
+.section-picker.popover {
+  overflow: initial;
+}
+.section-picker.popover > .section-picker__dropdown {
+  position: absolute;
+}
 .section-picker__button {
   display: inline-flex;
   justify-content: space-between;
@@ -244,13 +273,12 @@ article {
   padding: 8px;
   border-radius: 8px;
   font-weight: bold;
-  font-size: 1.5rem;
 }
 .section-picker__dropdown {
   display: block; /* controlled by .hidden */
   padding: 8px;
   opacity: 0;
-  transform: translateY(-6px) scale(.995);
+  transform: translateY(-6px) scale(.99);
   pointer-events: none;
   transition: opacity 220ms cubic-bezier(.2,.9,.2,1), transform 220ms cubic-bezier(.2,.9,.2,1);
   will-change: opacity, transform;
@@ -258,6 +286,9 @@ article {
   border-radius: 8px;
   box-shadow: 0 8px 24px rgba(2,6,23,0.12);
   background: var(--glass);
+}
+.dropdown-arrow {
+  transition: 220ms;
 }
 
 .section-picker__dropdown.hidden { display: none; }
@@ -275,7 +306,7 @@ article {
 }
 .section-picker__dropdown.dropdown-closing {
   opacity: 0;
-  transform: translateY(-6px) scale(.995);
+  transform: translateY(-6px) scale(.99);
   pointer-events: none;
 }
 
