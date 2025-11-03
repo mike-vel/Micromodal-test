@@ -1,11 +1,28 @@
 import MicroModal from './micromodal.js'
 import './prism.js'
 
-let externalLinks = [
-  ["Advanced"]
-]
-let versionLinks = [
-  []
+const domain = 'file:///C:/Users/azemi/OneDrive/Desktop/Micromodal/docs/src/'
+const externalLinks = {
+  '1.x.x': [
+    ['Introduction', 'index.html'],
+    ['Getting Started', 'getting-started.html'],
+    ['Configuration', 'configuration.html'],
+    // ['Plugins', 'plugins.html'],
+    ['API Reference', 'api-reference.html'],
+    ['FAQ', 'faq.html']
+  ],
+  '0.9.1': [
+    ['Introduction', 'index.html'],
+    ['Getting Started', 'getting-started.html'],
+    ['Configuration', 'configuration.html'],
+    // ['Plugins', 'plugins.html'],
+    ['API Reference', 'api-reference.html'],
+    ['FAQ', 'faq.html']
+  ]
+}
+const versionFolders = [
+  ['1.x.x', ''], // Directly in current domain
+  ['0.9.1', 'v0']
 ]
 
 // Theme handling
@@ -74,8 +91,45 @@ const sectionPickerList = document.getElementById('section-picker')
 const otherLinksPicker = document.getElementById('other-links-picker')
 
 const versionsDropdown = document.getElementById('versions-dropdown')
+const currentVersionEl = document.getElementById('current-version')
 const versionPickerBtn = document.getElementById('version-picker-button')
 
+const highlightPageSection = function () {
+  const scrollPosition = document.documentElement.scrollTop || document.body.scrollTop
+
+  for (const section in sections) {
+    if (sections[section].position <= scrollPosition) {
+      const prev = [
+        sectionsEl.querySelector('.active'),
+        sectionPickerList.querySelector('.active')
+      ].filter(Boolean)
+      Array.prototype.forEach.call(prev, function (e) {
+        e.classList.remove('active')
+      })
+
+      const highlightLinks = [
+        sectionsEl.querySelector('a[href=\\#' + section + ']'),
+        sectionPickerList.querySelector('a[href=\\#' + section + ']')
+      ].filter(Boolean)
+      Array.prototype.forEach.call(highlightLinks, function (e) {
+        e.classList.add('active')
+      })
+
+      // Update section picker label
+      currentSectionEl.innerText = sections[section].name
+    }
+  }
+}
+
+let sectionElements
+
+function updateSectionPositions () {
+  Array.prototype.forEach.call(sectionElements, function (e) {
+    sections[e.id].position = e.offsetTop - 64
+  })
+}
+
+// Dropdowns
 const dropdowns = {
   versions: {
     elem: versionsDropdown,
@@ -153,14 +207,6 @@ sectionPickerBtn.addEventListener('click', function (e) {
   }
 })
 
-// Close dropdown if Escape key is pressed
-sectionPickerBtn.addEventListener('keydown', function (e) {
-  if (e.key === 'Escape') {
-    closeDropdown('versions')
-    closeDropdown('sections')
-  }
-})
-
 // Close dropdown when clicking outside
 document.addEventListener('click', function (ev) {
   if (dropdowns.versions.opened) {
@@ -184,49 +230,15 @@ document.addEventListener('keydown', function (ev) {
   if (isEsc && dropdowns.sections.opened) closeDropdown('sections')
 })
 
-const highlightPageSection = function () {
-  const scrollPosition = document.documentElement.scrollTop || document.body.scrollTop
-
-  for (const section in sections) {
-    if (sections[section].position <= scrollPosition) {
-      const prev = [
-        sectionsEl.querySelector('.active'),
-        sectionPickerList.querySelector('.active')
-      ].filter(Boolean)
-      Array.prototype.forEach.call(prev, function (e) {
-        e.classList.remove('active')
-      })
-
-      const highlightLinks = [
-        sectionsEl.querySelector('a[href=\\#' + section + ']'),
-        sectionPickerList.querySelector('a[href=\\#' + section + ']')
-      ].filter(Boolean)
-      Array.prototype.forEach.call(highlightLinks, function (e) {
-        e.classList.add('active')
-      })
-
-      // Update section picker label
-      currentSectionEl.innerText = sections[section].name
-    }
-  }
-}
-
-let sectionElements
-
-function updateSectionPositions () {
-  Array.prototype.forEach.call(sectionElements, function (e) {
-    sections[e.id].position = e.offsetTop - 64
-  })
-}
-
 window.onload = function () {
+  // For sections
   sectionElements = document.querySelectorAll('.heading')
-  let sectionHTML = ''
+  let sectionsElHTML = ''
   let sectionPickerHTML = ''
 
   Array.prototype.forEach.call(sectionElements, function (e) {
     // Add section navigation links
-    sectionHTML += '<li class="lh-copy pv2 ba bl-0 bt-0 br-0 b--dotted b--black-10"><a href="#' + e.id + '" class="navlink">' + e.innerText + '</a></li>'
+    sectionsElHTML += '<li class="lh-copy pv2 ba bl-0 bt-0 br-0 b--dotted b--black-10"><a href="#' + e.id + '" class="navlink">' + e.innerText + '</a></li>'
     sectionPickerHTML += '<li role="none" class="lh-copy pv2 ba bl-0 bt-0 br-0 b--dotted b--black-10"><a role="menuitem" href="#' + e.id + '" class="navlink">' + e.innerText + '</a></li>'
 
     // Store section names
@@ -245,7 +257,7 @@ window.onload = function () {
     updateSectionPositions()
   })
 
-  sectionsEl.innerHTML = sectionHTML
+  sectionsEl.innerHTML = sectionsElHTML
   sectionPickerList.innerHTML = sectionPickerHTML
 
   // Highlight first section on load
@@ -260,6 +272,56 @@ window.onload = function () {
     currentSectionEl.innerText = sections[first.id].name
   }
   highlightPageSection()
+
+  // For external links and links to other versions
+  const currentPath = window.location.pathname
+
+  // Get the current version number and display it to the user
+  let currentVersion = versionFolders[0][0] // Default to latest
+  Array.prototype.forEach.call(versionFolders, function (e) {
+    const folder = e[1]
+    if (currentPath.includes('/' + folder + '/') || (folder === '' && !currentPath.match(/\/v[0-9]+/))) {
+      currentVersion = e[0]
+    }
+  })
+  currentVersionEl.innerText = currentVersion
+
+  // Display a list of available versions
+  let versionsDropdownHTML = ''
+  let currentLinkPrefix = domain
+  let currentLink = 'index.html'
+  Array.prototype.forEach.call(versionFolders, function (e) {
+    // Add navigation links
+    const externalLinksList = externalLinks[e[0]]
+    let linkTo = 'index.html' // Default link
+    Array.prototype.forEach.call(externalLinksList, function (link) {
+      if (currentPath.endsWith(link[1]) || (link[1] === 'index.html' && currentPath.endsWith('/'))) {
+        linkTo = link[1]
+      }
+    })
+
+    if (e[0] === currentVersion) {
+      currentLinkPrefix = domain + (e[1] ? e[1] + '/' : '')
+      currentLink = linkTo
+    }
+    linkTo = domain + (e[1] ? e[1] + '/' : '') + linkTo
+    versionsDropdownHTML += '<li role="none" class="lh-copy pv2 ba bl-0 bt-0 br-0 b--dotted b--black-10"><a role="menuitem" href="' + linkTo + '" class="navlink' + (e[0] === currentVersion ? ' active' : '') + '">' + e[0] + '</a></li>'
+  })
+  versionsDropdown.innerHTML = versionsDropdownHTML
+
+  // Display other links
+  let otherLinksHTML = ''
+  let otherLinksPickerHTML = ''
+  Array.prototype.forEach.call(externalLinks[currentVersion], function (e) {
+    // Add section navigation links
+    let linkTo = currentLinkPrefix + e[1]
+    if (linkTo === currentLinkPrefix + currentLink) linkTo = '#'
+
+    otherLinksHTML += '<li class="lh-copy pv2 ba bl-0 bt-0 br-0 b--dotted b--black-10"><a href="' + linkTo + '" class="navlink' + (e[1] === currentLink ? ' active' : '') + '">' + e[0] + '</a></li>'
+    otherLinksPickerHTML += '<li role="none" class="lh-copy pv2 ba bl-0 bt-0 br-0 b--dotted b--black-10"><a role="menuitem" href="' + linkTo + '" class="navlink' + (e[1] === currentLink ? ' active' : '') + '">' + e[0] + '</a></li>'
+  })
+  otherLinksEl.innerHTML = otherLinksHTML
+  otherLinksPicker.innerHTML = otherLinksPickerHTML
 }
 
 sectionsDropdown.addEventListener('click', function (e) {
