@@ -5,6 +5,7 @@
   "main": "dist/micromodal.js",
   "cdn": "dist/micromodal.min.js",
   "module": "dist/micromodal.es.js",
+  "commonJS": "dist/micromodal.cjs",
   "files": [
     "/dist"
   ],
