@@ -1,7 +1,7 @@
 import MicroModal from './micromodal.js'
 import './prism.js'
 
-const domain = 'file:///C:/Users/azemi/OneDrive/Desktop/Micromodal/docs/src/'
+const currentPath = window.location.pathname
 const externalLinks = {
   '1.x.x': [
     ['Introduction', 'index.html'],
@@ -274,7 +274,6 @@ window.onload = function () {
   highlightPageSection()
 
   // For external links and links to other versions
-  const currentPath = window.location.pathname
 
   // Get the current version number and display it to the user
   let currentVersion = versionFolders[0][0] // Default to latest
@@ -285,6 +284,15 @@ window.onload = function () {
     }
   })
   currentVersionEl.innerText = currentVersion
+
+  // Derive the domain
+  let domain = currentPath.replace(/\/v[0-9]+/, '') // strip version folder
+  let linkToReplace = ''
+  Array.prototype.forEach.call(externalLinks[currentVersion], function (e) {
+    if (domain.endsWith(e[1])) linkToReplace = e[1]
+  })
+  domain = domain.replace(linkToReplace, '') // strip page
+  if (!domain.endsWith('/')) domain += '/'
 
   // Display a list of available versions
   let versionsDropdownHTML = ''
