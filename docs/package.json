@@ -9,6 +9,11 @@
     "tests"
   ],
   "source": "src/index.html",
+  "targets": {
+    "default": {
+      "publicUrl": "./"
+    }
+  },
   "scripts": {
     "dev": "parcel ./src/index.html",
     "build": "parcel build ./src/index.html --detailed-report",
