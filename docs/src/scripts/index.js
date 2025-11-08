@@ -285,6 +285,12 @@ window.onload = function () {
   })
   currentVersionEl.innerText = currentVersion
 
+  // Show the outdated version warning if not latest
+  if (currentVersion !== versionFolders[0][0]) {
+    const warningEl = document.getElementById('outdated-version-warning')
+    warningEl.classList.remove('hidden')
+  }
+
   // Derive the domain
   let domain = currentPath.replace(/\/v[0-9]+/, '') // strip version folder
   let linkToReplace = ''
