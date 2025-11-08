@@ -46,14 +46,14 @@
 <body class="js-body sans-serif">
 
   <!-- Skip link for keyboard users -->
-  <a class="skip-link" href="#main-content">Skip to content</a>
+  <a class="skip-link btn-primary" href="#main-content">Skip to content</a>
 
   <div class="center cf ph3 mw8 mw9-l">
 
     <header class="header mt4" role="banner">
-      <a href="./index.html" aria-label="Micromodal.js Homepage" class="navlink dark-gray no-underline">
-      <div class="logo" id="logo">
         <svg xmlns="http://www.w3.org/2000/svg" width="40" height="25" viewBox="0 0 40 25" style="margin-inline-end: 16px;" aria-hidden="true">
+      <div class="logo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="25" viewBox="0 0 40 25" aria-hidden="true">
           <g fill-rule="evenodd">
             <path
               d="M1.2 0h37.6c.6627 0 1.2.5373 1.2 1.2v22.6c0 .6627-.5373 1.2-1.2 1.2H1.2C.5373 25 0 24.4627 0 23.8V1.2C0 .5373.5373 0 1.2 0zm5.6 6.0484c-.4418 0-.8.3582-.8.8v11.3032c0 .4418.3582.8.8.8h26.8c.4418 0 .8-.3582.8-.8V6.8484c0-.4418-.3582-.8-.8-.8H6.8z" />
@@ -157,6 +157,16 @@
             </button>
           </div>
         </div>
+
+        <!-- Pagination -->
+        <nav class="pagination mt4" aria-label="Page navigation">
+          <a id="previous-link" class="pagination-link btn-primary grow" role="button">
+            Previous
+          </a>
+          <a id="next-link" class="pagination-link btn-primary grow" role="button">
+            Next
+          </a>
+        </nav>
       </article>
     </main>
 

@@ -300,18 +300,25 @@ window.onload = function () {
   domain = domain.replace(linkToReplace, '') // strip page
   if (!domain.endsWith('/')) domain += '/'
 
+  // Logo link to latest version homepage
+  document.getElementById('logo').setAttribute('href', domain + versionFolders[0][1] + 'index.html')
+
   // Display a list of available versions
   let versionsDropdownHTML = ''
   let currentLinkPrefix = domain
   let currentLink = 'index.html'
+  let currentLinkIndex = 0
   Array.prototype.forEach.call(versionFolders, function (e) {
     // Add navigation links
     const externalLinksList = externalLinks[e[0]]
     let linkTo = 'index.html' // Default link
+    let externalLinkIndex = 0
     Array.prototype.forEach.call(externalLinksList, function (link) {
       if (currentPath.endsWith(link[1]) || (link[1] === 'index.html' && currentPath.endsWith('/'))) {
         linkTo = link[1]
+        if (e[0] === currentVersion) currentLinkIndex = externalLinkIndex
       }
+      externalLinkIndex++
     })
 
     if (e[0] === currentVersion) {
@@ -336,6 +343,20 @@ window.onload = function () {
   })
   otherLinksEl.innerHTML = otherLinksHTML
   otherLinksPicker.innerHTML = otherLinksPickerHTML
+
+  // Set previous and next page links
+  if (currentLinkIndex === 0) {
+    document.getElementById('previous-link').style.display = 'none'
+  } else {
+    document.getElementById('previous-link').innerText = externalLinks[currentVersion][currentLinkIndex - 1][0]
+    document.getElementById('previous-link').setAttribute('href', currentLinkPrefix + externalLinks[currentVersion][currentLinkIndex - 1][1])
+  }
+  if (currentLinkIndex === externalLinks[currentVersion].length - 1) {
+    document.getElementById('next-link').style.display = 'none'
+  } else {
+    document.getElementById('next-link').innerText = externalLinks[currentVersion][currentLinkIndex + 1][0]
+    document.getElementById('next-link').setAttribute('href', currentLinkPrefix + externalLinks[currentVersion][currentLinkIndex + 1][1])
+  }
 }
 
 sectionsDropdown.addEventListener('click', function (e) {

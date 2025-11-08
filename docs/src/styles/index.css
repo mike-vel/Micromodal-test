@@ -78,29 +78,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Skip link */
-.skip-link {
-  position: absolute;
-  left: -999px;
-  top: auto;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  z-index: 9999;
-  background: var(--brand);
-  color: #ffffff;
-  padding: 8px 12px;
-  border-radius: 4px;
-  text-decoration: none;
-}
-.skip-link:focus {
-  left: 12px;
-  top: 12px;
-  width: auto;
-  height: auto;
-  box-shadow: 0 8px 20px rgba(2,6,23,0.2);
-}
-
 /* Header & actions */
 .header {
   position: relative;
@@ -191,6 +168,23 @@ a.link, a.link:visited {
   border-end-start-radius: 0;
   border-inline-start: 3px solid var(--brand);
 }
+.pagination {
+  display: flex;
+  flex-flow: wrap;
+  width: 100%;
+  gap: 12px;
+}
+.pagination-link {
+  display: block;
+  font-weight: bold;
+  text-align: center;
+}
+.pagination > :nth-child(1) { margin-inline-end: auto; }
+body:not([dir="rtl"]) .pagination > :nth-child(1)::before { content: "← "; }
+body[dir="rtl"] .pagination > :nth-child(1)::before { content: " →"; }
+.pagination > :nth-child(2) { margin-inline-start: auto; }
+body:not([dir="rtl"]) .pagination > :nth-child(2)::after { content: " →"; }
+body[dir="rtl"] .pagination > :nth-child(2)::after { content: "← "; }
 code {
   color: blueviolet;
   padding: .2rem .4rem;
@@ -249,6 +243,34 @@ aside {
 }
 
 .hidden { display: none !important; }
+
+.btn-primary {
+  background: var(--brand);
+  color: #ffffff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+/* Skip link */
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  z-index: 9999;
+  border-radius: 4px;
+}
+.skip-link:focus {
+  left: 12px;
+  top: 12px;
+  width: auto;
+  height: auto;
+  box-shadow: 0 8px 20px rgba(2,6,23,0.2);
+}
+
 /* Gentle card for main content */
 article {
   background: linear-gradient(180deg, transparent, rgba(0,0,0,0.01));
