@@ -1,4 +1,3 @@
-import MicroModal from './micromodal.js'
 import './prism.js'
 
 const currentPath = window.location.pathname
@@ -52,32 +51,9 @@ if (themeToggle) {
   })
 }
 
-// Initial config for setting up modals
-MicroModal.init({
-  openTrigger: 'data-custom-open',
-  disableScroll: false,
-  awaitCloseAnimation: true
-})
-
-// Programmatically show modal
-document.querySelector('.js-modal-trigger')?.addEventListener('click', function (event) {
-  MicroModal.show('modal-2', {
-    debugMode: true,
-    disableScroll: true,
-    onShow: function (modal) { document.querySelector('.js-body').classList.add(modal.id) },
-    onClose: function (modal) { document.querySelector('.js-body').classList.remove(modal.id) },
-    closeTrigger: 'data-custom-close',
-    awaitCloseAnimation: true
-  })
-})
-
-document.querySelector('.js-modal-close-trigger')?.addEventListener('click', function (event) {
-  event.preventDefault()
-  MicroModal.close('modal-2')
-})
-
 // Scrollspy
 const sections = {}
+let sectionPickerEnabled = false
 
 // Aside navigation elements
 const sectionsEl = document.getElementById('sections')
@@ -246,10 +222,18 @@ window.onload = function () {
       name: e.innerText,
       position: e.offsetTop - 64
     }
+    sectionPickerEnabled = true
 
     // Add anchor links to headings
     e.innerHTML = e.innerHTML + ' <a class="link" href="#' + e.id + '" aria-label="Anchor link to heading">🔗</a>'
   })
+
+  // Disable section picker if there are less than 2 sections
+  if (!sectionPickerEnabled) {
+    document.querySelectorAll('.in-this-page').forEach(function (e) {
+      e.classList.add('hidden')
+    })
+  }
 
   // Store section positions
   updateSectionPositions()
@@ -287,8 +271,7 @@ window.onload = function () {
 
   // Show the outdated version warning if not latest
   if (currentVersion !== versionFolders[0][0]) {
-    const warningEl = document.getElementById('outdated-version-warning')
-    warningEl.classList.remove('hidden')
+    document.getElementById('outdated-version-warning').classList.remove('hidden')
   }
 
   // Derive the domain
@@ -306,6 +289,7 @@ window.onload = function () {
   // Display a list of available versions
   let versionsDropdownHTML = ''
   let currentLinkPrefix = domain
+  let githubEditLinkPrefix = 'https://github.com/mike-vel/Micromodal-test/blob/master/docs/src/'
   let currentLink = 'index.html'
   let currentLinkIndex = 0
   Array.prototype.forEach.call(versionFolders, function (e) {
@@ -323,12 +307,20 @@ window.onload = function () {
 
     if (e[0] === currentVersion) {
       currentLinkPrefix = domain + (e[1] ? e[1] + '/' : '')
+      githubEditLinkPrefix += (e[1] ? e[1] + '/' : '')
       currentLink = linkTo
+
+      // Set link to index.html for current version
+      linkTo = currentLinkPrefix + 'index.html'
+    } else {
+      linkTo = domain + (e[1] ? e[1] + '/' : '') + linkTo
     }
-    linkTo = domain + (e[1] ? e[1] + '/' : '') + linkTo
     versionsDropdownHTML += '<li role="none" class="lh-copy pv2 ba bl-0 bt-0 br-0 b--dotted b--black-10"><a role="menuitem" href="' + linkTo + '" class="navlink' + (e[0] === currentVersion ? ' active' : '') + '">' + e[0] + '</a></li>'
   })
   versionsDropdown.innerHTML = versionsDropdownHTML
+
+  // Set link for "Edit this page" button
+  document.getElementById('edit-page-link').setAttribute('href', githubEditLinkPrefix + currentLink)
 
   // Display other links
   let otherLinksHTML = ''
@@ -346,13 +338,13 @@ window.onload = function () {
 
   // Set previous and next page links
   if (currentLinkIndex === 0) {
-    document.getElementById('previous-link').style.display = 'none'
+    document.getElementById('previous-link').classList.add('hidden')
   } else {
     document.getElementById('previous-link').innerText = externalLinks[currentVersion][currentLinkIndex - 1][0]
     document.getElementById('previous-link').setAttribute('href', currentLinkPrefix + externalLinks[currentVersion][currentLinkIndex - 1][1])
   }
   if (currentLinkIndex === externalLinks[currentVersion].length - 1) {
-    document.getElementById('next-link').style.display = 'none'
+    document.getElementById('next-link').classList.add('hidden')
   } else {
     document.getElementById('next-link').innerText = externalLinks[currentVersion][currentLinkIndex + 1][0]
     document.getElementById('next-link').setAttribute('href', currentLinkPrefix + externalLinks[currentVersion][currentLinkIndex + 1][1])

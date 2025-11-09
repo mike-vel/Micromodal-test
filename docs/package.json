@@ -15,8 +15,8 @@
     }
   },
   "scripts": {
-    "dev": "parcel ./src/index.html",
-    "build": "parcel build ./src/index.html --detailed-report",
+    "dev": "parcel ./src/**/*.html --public-url ./",
+    "build": "parcel build ./src/**/*.html --detailed-report --public-url ./",
     "deploy": "now --prod",
     "sync": "cp ../lib/dist/micromodal.js ./src/scripts/",
     "test": "echo \"Error: no test specified\" && exit 1"
