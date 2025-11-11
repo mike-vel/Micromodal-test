@@ -6,6 +6,7 @@
 :root {
   --bg: #ffffff;
   --bg-gradient: #fdfdfd;
+  --loading: #e0e0e0;
   --text: #0b1220;
   --muted: #68707a;
   --brand: #0b5cff;
@@ -24,6 +25,7 @@
   :root:not([data-theme]) {
     --bg: #0b0f14;
     --bg-gradient: #0d1216;
+    --loading: #2f2f2f;
     --text: #e6eef6;
     --muted: #98a0ac;
     --brand: #6ea8ff;
@@ -47,6 +49,7 @@
 html[data-theme="dark"] {
   --bg: #0b0f14;
   --bg-gradient: #0d1216;
+  --loading: #2f2f2f;
   --text: #e6eef6;
   --muted: #98a0ac;
   --brand: #6ea8ff;
@@ -174,14 +177,19 @@ a.link, a.link:visited {
   border-end-start-radius: 0;
   border-inline-start: 3px solid var(--brand);
 }
+.pagination-container {
+  min-height: 4em;
+}
 .pagination {
   display: flex;
   flex-flow: wrap;
   width: 100%;
   gap: 12px;
+  min-height: 4em;
+  align-items: center;
 }
 .pagination-link {
-  display: block;
+  display: inline-block;
   font-weight: bold;
   text-align: center;
 }
@@ -260,8 +268,7 @@ hr {
 /* Skip link */
 .skip-link {
   position: absolute;
-  left: -999px;
-  top: auto;
+  top: -999px;
   width: 1px;
   height: 1px;
   overflow: hidden;
@@ -345,6 +352,24 @@ article {
   opacity: 0;
   transform: translateY(-6px) scale(.99);
   pointer-events: none;
+}
+
+/* Skeleton loading */
+.loading {
+  background: var(--loading);
+  border-radius: 4px;
+  opacity: 0.5;
+  animation: pulse 1.5s infinite;
+}
+.loading::before {
+  content: "Loading...";
+}
+
+
+@keyframes pulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 0.2; }
+  100% { opacity: 0.5; }
 }
 
 /* small improvements kept from original */

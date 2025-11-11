@@ -6,7 +6,7 @@
 
   <title>Micromodal.js - Tiny javascript library for creating accessible modal dialogs</title>
   <meta name="description"
-    content="Micromodal enables you to create accessible modal dialogs with minimal configuration. At just 1.9kb minified and gzipped, its a tiny library for big change.">
+    content="Micromodal enables you to create accessible modal dialogs with minimal configuration. at just 2.4kb minified and gzipped, its a tiny library for big change.">
 
 
   <link rel="stylesheet" href="./styles/index.css">
@@ -21,7 +21,7 @@
   <meta property="og:url" content="https://micromodal.now.sh/" />
   <meta property="og:title" content="Micromodal - Tiny javascript library for creating accessible modal dialogs" />
   <meta property="og:description"
-    content="Micromodal enables you to create accessible modal dialogs with minimal configuration. At just 1.9kb minified and gzipped, its a tiny library for big change." />
+    content="Micromodal enables you to create accessible modal dialogs with minimal configuration. at just 2.4kb minified and gzipped, its a tiny library for big change." />
   <meta property="og:image" content="./images/micromodal.jpg" />
 
   <meta name="twitter:card" content="summary_large_image">
@@ -78,7 +78,7 @@
           </svg>
         </a>
 
-        <div class="section-picker popover" role="navigation" aria-label="Switch version used">
+        <div class="section-picker popover" role="navigation" id="version-picker-container" aria-label="Switch version used">
           <button class="section-picker__button" aria-haspopup="true" aria-expanded="false" aria-controls="versions-dropdown" id="version-picker-button">
             <span id="current-version">1.x.x</span>
             <span class="dropdown-arrow" aria-hidden="true">▼</span>
@@ -96,22 +96,24 @@
 
     <main class="cf mt4 mb5 flex">
 
-      <aside class="fl dn db-l w-25">
-        <div class="in-this-page">
-          <span class="muted">In this page:</span>
-          <ul class="list pl-slight mt2" id="sections" aria-label="Page sections">
+      <aside id="sidebar" class="fl dn db-l w-25 loading">
+        <div id="sidebar-content" class="hidden">
+          <div class="in-this-page">
+            <span class="muted">In this page:</span>
+            <ul class="list pl-slight mt2" id="sections" aria-label="Page sections">
+              <!-- Sections are dynamically added here -->
+            </ul>
+          </div>
+          <span class="muted">Other links:</span>
+          <ul class="list pl-slight mt2" id="other-links">
             <!-- Sections are dynamically added here -->
           </ul>
         </div>
-        <span class="muted">Other links:</span>
-        <ul class="list pl-slight mt2" id="other-links">
-          <!-- Sections are dynamically added here -->
-        </ul>
       </aside>
 
       <article id="main-content" class="fl w-100 w-75-l pl5-l">
-        <!-- Warning for outdated versions -->
-        <div class="block-warning f6 mb4 hidden" role="alert" id="outdated-version-warning">
+        <!-- Warning for outdated versions (manually updated) -->
+        <div class="block-warning f6 mb4 hidden" role="alert">
           You are viewing documentation for an older version of Micromodal.js. Please refer to the
           <a href="https://micromodal.now.sh/" target="_blank" rel="noopener" class="link">latest version</a> for up-to-date
           information.
@@ -147,19 +149,19 @@
         </div>
 
         <!-- Content -->
-        <h1 class="f3 fw6 lh-title mb4 " id="introduction">
+        <h1 class="f3 fw6 lh-title mb4" id="introduction">
           Introduction
         </h1>
 
-        <h3 class="f4 fw4 lh-copy mv4">
+        <p class="f4 fw4 lh-copy mv4">
           <strong>Micromodal.js</strong> is a lightweight, configurable and a11y-enabled modal library written in pure
           JavaScript
-        </h3>
+        </p>
 
         <p class="lh-copy mv4">
           It enables you to create <a href="https://www.w3.org/TR/wai-aria-practices-1.1/#dialog_modal" target="_blank"
             rel="noopener" class="link">WAI-ARIA guidelines</a> compliant modal dialogs, with confidence and with
-          minimal configuration. At just 1.8kb minified and gzipped, it's a tiny library for big change.
+          minimal configuration. At just 2.4kb minified and gzipped, it's a tiny library for big change.
         </p>
 
         <div class="bg-washed-green tc">
@@ -172,14 +174,16 @@
         </div>
 
         <!-- Pagination -->
-        <nav class="pagination mt4" aria-label="Page navigation">
-          <a id="previous-link" class="pagination-link btn-primary grow" role="button">
-            Previous
-          </a>
-          <a id="next-link" class="pagination-link btn-primary grow" role="button">
-            Next
-          </a>
-        </nav>
+        <div id="pagination-container" class="pagination-container mt2 pt2 ph2 loading">
+          <nav id="pagination" class="pagination hidden" aria-label="Page navigation">
+            <a id="previous-link" class="pagination-link btn-primary grow" role="button">
+              Previous
+            </a>
+            <a id="next-link" class="pagination-link btn-primary grow" role="button">
+              Next
+            </a>
+          </nav>
+        </div>
       </article>
     </main>
 

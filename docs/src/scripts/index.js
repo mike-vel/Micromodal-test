@@ -2,15 +2,8 @@ import './prism.js'
 
 const currentPath = window.location.pathname
 const externalLinks = {
-  '1.x.x': [
-    ['Introduction', 'index.html'],
-    ['Getting Started', 'getting-started.html'],
-    ['Configuration', 'configuration.html'],
-    // ['Plugins', 'plugins.html'],
-    ['API Reference', 'api-reference.html'],
-    ['FAQ', 'faq.html']
-  ],
-  '0.9.1': [
+  '1.x.x': [],
+  '0.8.6': [
     ['Introduction', 'index.html'],
     ['Getting Started', 'getting-started.html'],
     ['Configuration', 'configuration.html'],
@@ -20,8 +13,7 @@ const externalLinks = {
   ]
 }
 const versionFolders = [
-  ['1.x.x', ''], // Directly in current domain
-  ['0.9.1', 'v0']
+  ['0.8.6', ''] // Directly in current domain
 ]
 
 // Theme handling
@@ -97,7 +89,7 @@ const highlightPageSection = function () {
   }
 }
 
-let sectionElements
+let sectionElements = []
 
 function updateSectionPositions () {
   Array.prototype.forEach.call(sectionElements, function (e) {
@@ -269,11 +261,6 @@ window.onload = function () {
   })
   currentVersionEl.innerText = currentVersion
 
-  // Show the outdated version warning if not latest
-  if (currentVersion !== versionFolders[0][0]) {
-    document.getElementById('outdated-version-warning').classList.remove('hidden')
-  }
-
   // Derive the domain
   let domain = currentPath.replace(/\/v[0-9]+/, '') // strip version folder
   let linkToReplace = ''
@@ -284,7 +271,7 @@ window.onload = function () {
   if (!domain.endsWith('/')) domain += '/'
 
   // Logo link to latest version homepage
-  document.getElementById('logo').setAttribute('href', domain + versionFolders[0][1] + 'index.html')
+  document.getElementById('logo').setAttribute('href', domain + (versionFolders[0][1] ? versionFolders[0][1] + '/' : '') + 'index.html')
 
   // Display a list of available versions
   let versionsDropdownHTML = ''
@@ -318,6 +305,7 @@ window.onload = function () {
     versionsDropdownHTML += '<li role="none" class="lh-copy pv2 ba bl-0 bt-0 br-0 b--dotted b--black-10"><a role="menuitem" href="' + linkTo + '" class="navlink' + (e[0] === currentVersion ? ' active' : '') + '">' + e[0] + '</a></li>'
   })
   versionsDropdown.innerHTML = versionsDropdownHTML
+  if (versionFolders.length < 2) document.getElementById('version-picker-container').classList.add('hidden')
 
   // Set link for "Edit this page" button
   document.getElementById('edit-page-link').setAttribute('href', githubEditLinkPrefix + currentLink)
@@ -336,6 +324,10 @@ window.onload = function () {
   otherLinksEl.innerHTML = otherLinksHTML
   otherLinksPicker.innerHTML = otherLinksPickerHTML
 
+  // Make sidebar visible
+  document.getElementById('sidebar-content').classList.remove('hidden')
+  document.getElementById('sidebar').classList.remove('loading')
+
   // Set previous and next page links
   if (currentLinkIndex === 0) {
     document.getElementById('previous-link').classList.add('hidden')
@@ -349,6 +341,10 @@ window.onload = function () {
     document.getElementById('next-link').innerText = externalLinks[currentVersion][currentLinkIndex + 1][0]
     document.getElementById('next-link').setAttribute('href', currentLinkPrefix + externalLinks[currentVersion][currentLinkIndex + 1][1])
   }
+
+  // Make pagination visible
+  document.getElementById('pagination').classList.remove('hidden')
+  document.getElementById('pagination-container').classList.remove('loading', 'pt2', 'ph2')
 }
 
 sectionsDropdown.addEventListener('click', function (e) {
